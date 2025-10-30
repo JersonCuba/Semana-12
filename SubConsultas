@@ -1,0 +1,97 @@
+🔍 SUBCONSULTAS (IN, EXISTS)
+🧠 Teoría
+
+Una subconsulta es una instrucción SELECT dentro de otra consulta.
+Sirve para obtener resultados intermedios que luego se usan en la consulta principal.
+
+Las más comunes son:
+
+IN: compara un valor con una lista devuelta por otra consulta.
+
+EXISTS: verifica si la subconsulta devuelve al menos una fila.
+
+💻 Ejemplos
+
+- IN
+SELECT CustomerID, CompanyName
+FROM SalesLT.Customer
+WHERE CustomerID IN (
+    SELECT CustomerID FROM SalesLT.SalesOrderHeader
+);
+
+
+- EXISTS
+
+SELECT p.ProductID, p.Name
+FROM SalesLT.Product AS p
+WHERE EXISTS (
+    SELECT 1 FROM SalesLT.SalesOrderDetail AS d
+    WHERE d.ProductID = p.ProductID
+);
+
+
+📅 FUNCIONES DE FECHA
+🧠 Teoría
+
+Las funciones de fecha permiten manipular y analizar valores de tipo datetime en SQL Server.
+Algunas de las más utilizadas:
+
+| Función                               | Descripción                                 |
+| ------------------------------------- | ------------------------------------------- |
+| `DAY(fecha)`                          | Devuelve el día del mes                     |
+| `MONTH(fecha)`                        | Devuelve el número del mes                  |
+| `YEAR(fecha)`                         | Devuelve el año                             |
+| `DATEADD(intervalo, valor, fecha)`    | Suma o resta unidades de tiempo             |
+| `DATEDIFF(intervalo, fecha1, fecha2)` | Calcula la diferencia entre dos fechas      |
+| `GETDATE()`                           | Devuelve la fecha y hora actual del sistema |
+
+💻 EJEMPLO
+SELECT 
+    OrderDate,
+    DAY(OrderDate) AS Dia,
+    MONTH(OrderDate) AS Mes,
+    YEAR(OrderDate) AS Año,
+    DATEADD(DAY, 10, OrderDate) AS FechaMas10Dias,
+    DATEDIFF(DAY, OrderDate, GETDATE()) AS DiasHastaHoy
+FROM SalesLT.SalesOrderHeader;
+
+
+🔤 FUNCIONES DE CADENA
+🧠 Teoría
+
+Estas funciones permiten manipular y formatear texto (VARCHAR, NVARCHAR, etc.).
+Se usan para unir, cortar o limpiar cadenas de caracteres.
+
+| Función                              | Descripción                                         |
+| ------------------------------------ | --------------------------------------------------- |
+| `CONCAT(a,b,...)`                    | Une varias cadenas                                  |
+| `LEN(texto)`                         | Longitud del texto                                  |
+| `SUBSTRING(texto, inicio, longitud)` | Extrae una parte del texto                          |
+| `LOWER(texto)` / `UPPER(texto)`      | Convierte a minúsculas / mayúsculas                 |
+| `LTRIM(texto)` / `RTRIM(texto)`      | Elimina espacios en blanco a la izquierda / derecha |
+
+
+💻 EJEMPLO
+SELECT 
+    CONCAT(FirstName, ' ', LastName) AS NombreCompleto,
+    LEN(FirstName) AS LargoNombre,
+    SUBSTRING(LastName, 1, 3) AS Iniciales,
+    UPPER(LastName) AS ApellidoMayus
+FROM SalesLT.Customer;
+
+
+🔢 FUNCIONES DE CONVERSIÓN (CAST, CONVERT)
+🧠 Teoría
+
+Las funciones de conversión permiten cambiar el tipo de dato de un valor (por ejemplo, de número a texto o de fecha a cadena).
+
+| Función                        | Descripción                                        |
+| ------------------------------ | -------------------------------------------------- |
+| `CAST(valor AS tipo)`          | Convierte un valor a otro tipo                     |
+| `CONVERT(tipo, valor, estilo)` | Convierte con formato adicional (útil para fechas) |
+
+💻 EJEMPLO
+SELECT 
+    CAST(SalesOrderID AS VARCHAR(10)) AS PedidoTexto,
+    CONVERT(VARCHAR(10), OrderDate, 103) AS Fecha_DDMMYYYY
+FROM SalesLT.SalesOrderHeader;
